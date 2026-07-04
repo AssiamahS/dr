@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dr. Andrew Assiamah, M.D. — A Legacy of Steady Hands</title>
+<meta name="description" content="Dr. Andrew Assiamah, M.D. — board-certified anesthesiologist, former Chief of Anesthesiology at Lourdes Medical Center of Burlington County, and 2017 Lourdes Healing Spirit Award honoree. Two decades of steady hands." />
+<meta property="og:title" content="Dr. Andrew Assiamah, M.D." />
+<meta property="og:description" content="A legacy of steady hands — two decades of compassion and precision in anesthesiology." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://drandrewassiamah.com" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --night:#0B1D18;
+    --panel:#10261F;
+    --panel-2:#143028;
+    --ivory:#F2EEE3;
+    --sage:#A3BFB1;
+    --gold:#C9A24B;
+    --gold-bright:#E3BE66;
+    --gold-soft:rgba(201,162,75,.13);
+    --line:rgba(242,238,227,.13);
+    --max:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--night);
+    color:var(--ivory);
+    font-family:"Archivo",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold);color:var(--night)}
+
+  a{color:var(--gold-bright);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
+
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,29,24,.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:var(--max);margin:0 auto}
+  .monogram{
+    font-family:"Newsreader",serif;font-size:1.3rem;font-weight:500;
+    color:var(--ivory);letter-spacing:.5px;
+  }
+  .monogram span{color:var(--gold)}
+  .nav-links{display:flex;gap:26px;list-style:none}
+  .nav-links a{color:var(--sage);font-size:.82rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase}
+  .nav-links a:hover{color:var(--ivory);text-decoration:none}
+  .nav-links .give-link{color:var(--gold)}
+  @media(max-width:640px){.nav-links{gap:16px}.nav-links li:nth-child(2){display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:110px 0 0;text-align:center;position:relative}
+  .eyebrow{
+    font-size:.76rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+    color:var(--gold);margin-bottom:26px;
+  }
+  h1{
+    font-family:"Newsreader",serif;font-weight:400;
+    font-size:clamp(2.6rem,7.5vw,5.2rem);
+    line-height:1.06;letter-spacing:-.5px;
+  }
+  h1 .md{font-style:italic;font-weight:300;color:var(--sage);font-size:.55em;display:block;margin-top:10px;letter-spacing:0}
+  .hero p.lede{
+    max-width:640px;margin:30px auto 0;color:var(--sage);
+    font-family:"Newsreader",serif;font-size:1.25rem;line-height:1.6;font-weight:300;
+  }
+  .hero p.lede em{color:var(--ivory);font-style:italic}
+  .hero-cta{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-block;padding:13px 30px;border-radius:2px;
+    font-size:.85rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+    transition:all .2s ease;
+  }
+  .btn-gold{background:var(--gold);color:var(--night)}
+  .btn-gold:hover{background:var(--gold-bright);text-decoration:none;transform:translateY(-1px)}
+  .btn-ghost{border:1px solid var(--line);color:var(--ivory)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);text-decoration:none}
+
+  /* ---------- the pulse: signature element ---------- */
+  .pulse-wrap{margin:70px auto 0;max-width:900px;padding:0 24px;position:relative}
+  .pulse-svg{width:100%;height:90px;display:block}
+  .pulse-svg .trace{
+    fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1400;stroke-dashoffset:1400;
+    animation:draw 4.5s ease-out forwards, breathe 6s ease-in-out 5s infinite;
+    filter:drop-shadow(0 0 6px rgba(201,162,75,.45));
+  }
+  .pulse-svg .baseline{stroke:var(--line);stroke-width:1;fill:none}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes breathe{0%,100%{opacity:1}50%{opacity:.55}}
+  .pulse-caption{
+    text-align:center;font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--sage);margin-top:6px;opacity:.7;
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .pulse-svg .trace{animation:none;stroke-dashoffset:0}
+    .btn-gold:hover{transform:none}
+    .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+  }
+
+  /* ---------- sections ---------- */
+  section{padding:100px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+  .sec-eyebrow{font-size:.74rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  h2{
+    font-family:"Newsreader",serif;font-weight:400;font-size:clamp(1.9rem,4vw,2.8rem);
+    line-height:1.15;margin-bottom:28px;letter-spacing:-.3px;
+  }
+  h2 em{font-style:italic;color:var(--sage)}
+  .prose{max-width:680px;color:var(--sage);font-size:1.06rem}
+  .prose p+p{margin-top:1.2em}
+  .prose strong{color:var(--ivory);font-weight:600}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- timeline ---------- */
+  .timeline{list-style:none;margin-top:50px;position:relative;max-width:760px}
+  .timeline::before{
+    content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;
+    background:linear-gradient(to bottom,var(--gold),var(--line));
+  }
+  .timeline li{position:relative;padding:0 0 42px 42px}
+  .timeline li:last-child{padding-bottom:0}
+  .timeline li::before{
+    content:"";position:absolute;left:0;top:7px;width:15px;height:15px;border-radius:50%;
+    background:var(--night);border:2px solid var(--gold);
+  }
+  .timeline .when{
+    font-size:.76rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    color:var(--gold);display:block;margin-bottom:5px;
+  }
+  .timeline .what{font-family:"Newsreader",serif;font-size:1.3rem;color:var(--ivory);line-height:1.35}
+  .timeline .where{color:var(--sage);font-size:.95rem;margin-top:4px}
+
+  /* ---------- award ---------- */
+  .award-panel{
+    margin-top:50px;background:var(--panel);border:1px solid var(--line);border-radius:4px;
+    padding:52px;position:relative;overflow:hidden;max-width:860px;
+  }
+  .award-panel::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+  .award-quote{
+    font-family:"Newsreader",serif;font-style:italic;font-weight:300;
+    font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.45;color:var(--ivory);
+  }
+  .award-quote .q{color:var(--gold);font-size:1.4em;line-height:0;vertical-align:-.15em}
+  .award-meta{margin-top:28px;color:var(--sage);font-size:.98rem;max-width:620px}
+  .award-meta p+p{margin-top:.8em}
+  .award-facts{display:flex;gap:34px;flex-wrap:wrap;margin-top:32px;padding-top:26px;border-top:1px solid var(--line)}
+  .award-facts div{min-width:130px}
+  .award-facts .k{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--sage);opacity:.8}
+  .award-facts .v{font-family:"Newsreader",serif;font-size:1.08rem;color:var(--ivory);margin-top:4px}
+  @media(max-width:640px){.award-panel{padding:32px 24px}}
+
+  /* ---------- record / press ---------- */
+  .record{list-style:none;margin-top:44px;max-width:860px}
+  .record li{border-top:1px solid var(--line)}
+  .record li:last-child{border-bottom:1px solid var(--line)}
+  .record a{
+    display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+    padding:22px 6px;color:var(--ivory);transition:background .2s ease;
+  }
+  .record a:hover{background:var(--gold-soft);text-decoration:none}
+  .record .src{font-size:.74rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+  .record .ttl{font-family:"Newsreader",serif;font-size:1.15rem;flex:1}
+  .record .arrow{color:var(--sage);font-size:1.1rem}
+  @media(max-width:640px){.record a{flex-direction:column;gap:6px}.record .arrow{display:none}}
+
+  /* ---------- gallery ---------- */
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:50px}
+  @media(max-width:760px){.gallery{grid-template-columns:repeat(2,1fr)}}
+  .ph{
+    aspect-ratio:4/5;border-radius:3px;overflow:hidden;position:relative;
+    background:
+      repeating-linear-gradient(45deg,transparent 0 14px,rgba(201,162,75,.05) 14px 28px),
+      repeating-linear-gradient(-45deg,transparent 0 14px,rgba(163,191,177,.04) 14px 28px),
+      var(--panel);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph .init{
+    font-family:"Newsreader",serif;font-style:italic;font-weight:300;
+    color:var(--gold);opacity:.5;font-size:2rem;
+  }
+  .gallery-note{margin-top:18px;color:var(--sage);font-size:.88rem;opacity:.8}
+
+  /* ---------- give ---------- */
+  #give{background:var(--panel);border-top:1px solid var(--line)}
+  .give-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:50px;max-width:900px}
+  @media(max-width:760px){.give-grid{grid-template-columns:1fr}}
+  .give-card{
+    background:var(--night);border:1px solid var(--line);border-radius:4px;
+    padding:38px 34px;display:flex;flex-direction:column;gap:14px;
+    transition:border-color .2s ease;
+  }
+  .give-card:hover{border-color:var(--gold)}
+  .give-card h3{font-family:"Newsreader",serif;font-weight:400;font-size:1.45rem;line-height:1.25}
+  .give-card p{color:var(--sage);font-size:.96rem;flex:1}
+  .give-card .btn{align-self:flex-start;margin-top:6px}
+  .honor-note{
+    margin-top:34px;max-width:720px;padding:22px 26px;border-left:2px solid var(--gold);
+    background:var(--gold-soft);color:var(--ivory);font-size:.98rem;border-radius:0 3px 3px 0;
+  }
+  .honor-note strong{color:var(--gold-bright)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:56px 0 46px;text-align:center}
+  .foot-sig{font-family:"Newsreader",serif;font-style:italic;font-weight:300;color:var(--sage);font-size:1.1rem}
+  .foot-domains{margin-top:14px;font-size:.8rem;color:var(--sage);opacity:.65;letter-spacing:.5px}
+  .foot-domains a{color:inherit}
+</style>
+</head>
+<body>
+
+<header>
+  <nav aria-label="Main">
+    <div class="monogram">Dr. Andrew <span>Assiamah</span></div>
+    <ul class="nav-links">
+      <li><a href="#work">His Work</a></li>
+      <li><a href="#honors">Honors</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a class="give-link" href="#give">Give</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <div class="hero wrap">
+    <p class="eyebrow">A Legacy of Steady Hands</p>
+    <h1>Dr. Andrew Assiamah<span class="md">Doctor of Medicine · Anesthesiology</span></h1>
+    <p class="lede">For more than two decades, he has been the last voice patients hear before surgery — and the quiet reason they <em>wake up safely</em> on the other side.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#give">Honor His Work</a>
+      <a class="btn btn-ghost" href="#work">His Story</a>
+    </div>
+  </div>
+
+  <!-- signature: the steady pulse -->
+  <div class="pulse-wrap" aria-hidden="true">
+    <svg class="pulse-svg" viewBox="0 0 900 90" preserveAspectRatio="none">
+      <line class="baseline" x1="0" y1="45" x2="900" y2="45"/>
+      <path class="trace" d="M0,45 L120,45 L138,45 L146,38 L154,52 L162,45 L260,45 L278,45 L286,12 L296,78 L306,30 L314,45 L440,45 L458,45 L466,38 L474,52 L482,45 L580,45 L598,45 L606,12 L616,78 L626,30 L634,45 L760,45 L778,45 L786,38 L794,52 L802,45 L900,45"/>
+    </svg>
+    <p class="pulse-caption">Steady · Present · Precise</p>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <p class="sec-eyebrow reveal">His Work</p>
+      <h2 class="reveal">The specialty nobody applauds —<br/><em>because it worked.</em></h2>
+      <div class="prose reveal">
+        <p>Anesthesiology is medicine's quietest discipline. Patients meet their anesthesiologist minutes before the most vulnerable hours of their lives, place their consciousness in his hands, and — when everything goes right — remember almost nothing. <strong>Dr. Andrew Assiamah</strong> has spent his career making sure everything goes right.</p>
+        <p>Trained at <strong>Rutgers Robert Wood Johnson Medical School</strong> (M.D., Class of 2000), he completed an internal medicine internship and then his anesthesiology residency at Rutgers Health in 2004. Board-certified and licensed in New Jersey, Pennsylvania, and Virginia over the course of his career, he rose to serve as <strong>Chief of Anesthesiology at Lourdes Medical Center of Burlington County</strong>, leading the department trusted with every operation in the building.</p>
+        <p>Today he practices with <strong>Hackensack Meridian Health</strong> at Riverview Medical Center and Bayshore Medical Center, based in Red Bank, New Jersey — more than twenty years of surgeries, and counting, without ever needing the spotlight.</p>
+      </div>
+
+      <ol class="timeline reveal">
+        <li>
+          <span class="when">2000</span>
+          <div class="what">Doctor of Medicine</div>
+          <div class="where">Rutgers Robert Wood Johnson Medical School</div>
+        </li>
+        <li>
+          <span class="when">2000 – 2004</span>
+          <div class="what">Internship &amp; Anesthesiology Residency</div>
+          <div class="where">Rutgers Health — internal medicine, then anesthesiology</div>
+        </li>
+        <li>
+          <span class="when">2004</span>
+          <div class="what">Board-certified · Licensed to practice</div>
+          <div class="where">New Jersey, then Pennsylvania and Virginia</div>
+        </li>
+        <li>
+          <span class="when">Career</span>
+          <div class="what">Chief of Anesthesiology</div>
+          <div class="where">Lourdes Medical Center of Burlington County — Willingboro, NJ</div>
+        </li>
+        <li>
+          <span class="when">2017</span>
+          <div class="what">Lourdes Healing Spirit Award</div>
+          <div class="where">Lourdes Health Foundation — Philadelphia</div>
+        </li>
+        <li>
+          <span class="when">Today</span>
+          <div class="what">Attending Anesthesiologist</div>
+          <div class="where">Hackensack Meridian Health — Riverview &amp; Bayshore Medical Centers, Red Bank, NJ</div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="honors">
+    <div class="wrap">
+      <p class="sec-eyebrow reveal">Honors</p>
+      <h2 class="reveal">The Healing Spirit Award</h2>
+      <div class="award-panel reveal">
+        <p class="award-quote"><span class="q">“</span>Honoring a Lourdes physician for compassion, dedication to patients, and years of service.<span class="q">”</span></p>
+        <div class="award-meta">
+          <p>On March 25, 2017, the Lourdes Health Foundation presented Dr. Assiamah with its annual <strong>Healing Spirit Award</strong> at “The Dance 2017 — Cirque,” the foundation's gala at the Curtis Center in Philadelphia, before more than 450 of the region's medical and business leaders.</p>
+          <p>He was one of three physicians honored that evening, alongside cardiologists Dr. Troy Randle and Dr. Thierry Momplaisir. Proceeds from the gala funded Lourdes community health programs.</p>
+        </div>
+        <div class="award-facts">
+          <div><div class="k">Presented by</div><div class="v">Lourdes Health Foundation</div></div>
+          <div><div class="k">Date</div><div class="v">March 25, 2017</div></div>
+          <div><div class="k">Venue</div><div class="v">The Curtis Center, Philadelphia</div></div>
+        </div>
+      </div>
+
+      <ul class="record reveal">
+        <li><a href="https://patch.com/new-jersey/cherryhill/lourdes-health-system-honors-physicians-its-healing-spirit-award" target="_blank" rel="noopener">
+          <span class="src">Patch · News</span><span class="ttl">Lourdes Health System honors physicians with its Healing Spirit Award</span><span class="arrow">→</span></a></li>
+        <li><a href="https://health.usnews.com/doctors/andrew-assiamah-123933" target="_blank" rel="noopener">
+          <span class="src">U.S. News</span><span class="ttl">Dr. Andrew A. Assiamah, M.D. — physician profile</span><span class="arrow">→</span></a></li>
+        <li><a href="https://www.doximity.com/pub/andrew-assiamah-md" target="_blank" rel="noopener">
+          <span class="src">Doximity</span><span class="ttl">Andrew Assiamah, M.D. — anesthesiology, Red Bank, NJ</span><span class="arrow">→</span></a></li>
+        <li><a href="https://www.healthgrades.com/physician/dr-andrew-assiamah-383fb" target="_blank" rel="noopener">
+          <span class="src">Healthgrades</span><span class="ttl">Dr. Andrew Assiamah, M.D. — anesthesiologist</span><span class="arrow">→</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="wrap">
+      <p class="sec-eyebrow reveal">Gallery</p>
+      <h2 class="reveal">A life in <em>practice</em></h2>
+      <!-- =====================================================
+           TO ADD PHOTOS: drop image files into the photos/ folder
+           named 1.jpg, 2.jpg, ... 6.jpg — they appear automatically.
+           ===================================================== -->
+      <div class="gallery reveal" id="photo-grid">
+        <div class="ph" data-src="photos/1.jpg"><span class="init">A.A.</span></div>
+        <div class="ph" data-src="photos/2.jpg"><span class="init">A.A.</span></div>
+        <div class="ph" data-src="photos/3.jpg"><span class="init">A.A.</span></div>
+        <div class="ph" data-src="photos/4.jpg"><span class="init">A.A.</span></div>
+        <div class="ph" data-src="photos/5.jpg"><span class="init">A.A.</span></div>
+        <div class="ph" data-src="photos/6.jpg"><span class="init">A.A.</span></div>
+      </div>
+      <p class="gallery-note reveal">Family photographs are being gathered for this page.</p>
+    </div>
+  </section>
+
+  <section id="give">
+    <div class="wrap">
+      <p class="sec-eyebrow reveal">Give</p>
+      <h2 class="reveal">Honor his work where it <em>happened</em></h2>
+      <div class="prose reveal">
+        <p>Dr. Assiamah's career belongs to two institutions: the Lourdes health system, where he led anesthesiology and earned the Healing Spirit Award, and Hackensack Meridian Health, where he practices today. Both foundations turn gifts directly into patient care.</p>
+      </div>
+      <div class="give-grid reveal">
+        <div class="give-card">
+          <h3>Virtua Health Foundation</h3>
+          <p>The Lourdes Health Foundation's mission continues under Virtua Health, which now operates Virtua Our Lady of Lourdes. Gifts support the same South Jersey communities Dr. Assiamah served as Chief of Anesthesiology.</p>
+          <a class="btn btn-gold" href="https://givetovirtua.org/" target="_blank" rel="noopener">Give to Virtua · Lourdes</a>
+        </div>
+        <div class="give-card">
+          <h3>Hackensack Meridian Health Foundation</h3>
+          <p>Supports Riverview Medical Center, Bayshore Medical Center, and the wider HMH network where Dr. Assiamah practices today — funding equipment, research, and care for patients regardless of means.</p>
+          <a class="btn btn-gold" href="https://give.hackensackmeridianhealth.org/" target="_blank" rel="noopener">Give to HMH</a>
+        </div>
+      </div>
+      <p class="honor-note reveal">Both donation forms include a <strong>“tribute”</strong> or <strong>“in honor of”</strong> option — write <strong>Dr. Andrew Assiamah</strong> and the hospital will note whose legacy inspired your gift.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p class="foot-sig">Built with love by his family.</p>
+  <p class="foot-domains">
+    <a href="https://drandrewassiamah.com">drandrewassiamah.com</a> · also home at
+    <a href="https://drassiamah.com">drassiamah.com</a> and
+    <a href="https://andrewassiamah.com">andrewassiamah.com</a>
+  </p>
+</footer>
+
+<script>
+  // scroll reveals
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  // gallery: swap placeholder for photo when the file exists in photos/
+  document.querySelectorAll(".ph[data-src]").forEach(ph => {
+    const img = new Image();
+    img.onload = () => { img.alt = "Dr. Andrew Assiamah"; ph.replaceChildren(img); };
+    img.src = ph.dataset.src;
+  });
+</script>
+
+</body>
+</html>
