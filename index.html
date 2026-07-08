@@ -9,6 +9,7 @@
 <meta property="og:description" content="A legacy of steady hands — two decades of compassion and precision in anesthesiology." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://drandrewassiamah.com" />
+<meta property="og:image" content="https://drandrewassiamah.com/photos/portrait.jpg" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -66,7 +67,26 @@
   @media(max-width:640px){.nav-links{gap:16px}.nav-links li:nth-child(2){display:none}}
 
   /* ---------- hero ---------- */
-  .hero{padding:110px 0 0;text-align:center;position:relative}
+  .hero-stage{position:relative;overflow:hidden}
+  .hero-sea{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;opacity:.30;filter:saturate(.65) brightness(.9);
+  }
+  .hero-veil{
+    position:absolute;inset:0;
+    background:linear-gradient(to bottom,rgba(11,29,24,.55),rgba(11,29,24,.35) 45%,var(--night) 96%);
+  }
+  .hero-stage>.hero,.hero-stage>.pulse-wrap{position:relative;z-index:1}
+  .hero{padding:90px 0 0;text-align:center;position:relative}
+  .hero-portrait{
+    width:min(200px,52vw);margin:0 auto 34px;border-radius:4px;padding:6px;
+    background:linear-gradient(160deg,var(--gold),rgba(201,162,75,.2));
+    box-shadow:0 22px 60px rgba(0,0,0,.55);
+  }
+  .hero-portrait img{
+    display:block;width:100%;border-radius:2px;
+    aspect-ratio:4/5;object-fit:cover;object-position:top;
+  }
   .eyebrow{
     font-size:.76rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;
     color:var(--gold);margin-bottom:26px;
@@ -114,6 +134,7 @@
     .pulse-svg .trace{animation:none;stroke-dashoffset:0}
     .btn-gold:hover{transform:none}
     .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+    .hero-sea{display:none}
   }
 
   /* ---------- sections ---------- */
@@ -248,23 +269,34 @@
 
 <main>
 
-  <div class="hero wrap">
-    <p class="eyebrow">A Legacy of Steady Hands</p>
-    <h1>Dr. Andrew Assiamah<span class="md">Doctor of Medicine · Anesthesiology</span></h1>
-    <p class="lede">For more than two decades, he has been the last voice patients hear before surgery — and the quiet reason they <em>wake up safely</em> on the other side.</p>
-    <div class="hero-cta">
-      <a class="btn btn-gold" href="#give">Honor His Work</a>
-      <a class="btn btn-ghost" href="#work">His Story</a>
-    </div>
-  </div>
+  <div class="hero-stage">
+    <!-- calm sea — video by Pexels, free license -->
+    <video class="hero-sea" autoplay muted loop playsinline preload="metadata" poster="photos/beach-poster.jpg" aria-hidden="true">
+      <source src="photos/beach.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-veil" aria-hidden="true"></div>
 
-  <!-- signature: the steady pulse -->
-  <div class="pulse-wrap" aria-hidden="true">
-    <svg class="pulse-svg" viewBox="0 0 900 90" preserveAspectRatio="none">
-      <line class="baseline" x1="0" y1="45" x2="900" y2="45"/>
-      <path class="trace" d="M0,45 L120,45 L138,45 L146,38 L154,52 L162,45 L260,45 L278,45 L286,12 L296,78 L306,30 L314,45 L440,45 L458,45 L466,38 L474,52 L482,45 L580,45 L598,45 L606,12 L616,78 L626,30 L634,45 L760,45 L778,45 L786,38 L794,52 L802,45 L900,45"/>
-    </svg>
-    <p class="pulse-caption">Steady · Present · Precise</p>
+    <div class="hero wrap">
+      <p class="eyebrow">A Legacy of Steady Hands</p>
+      <div class="hero-portrait">
+        <img src="photos/portrait.jpg" alt="Dr. Andrew Assiamah holding the 2017 Healing Spirit Award" />
+      </div>
+      <h1>Dr. Andrew Assiamah<span class="md">Doctor of Medicine · Anesthesiology</span></h1>
+      <p class="lede">For more than two decades, he has been the last voice patients hear before surgery — and the quiet reason they <em>wake up safely</em> on the other side.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="#give">Honor His Work</a>
+        <a class="btn btn-ghost" href="#work">His Story</a>
+      </div>
+    </div>
+
+    <!-- signature: the steady pulse -->
+    <div class="pulse-wrap" aria-hidden="true">
+      <svg class="pulse-svg" viewBox="0 0 900 90" preserveAspectRatio="none">
+        <line class="baseline" x1="0" y1="45" x2="900" y2="45"/>
+        <path class="trace" d="M0,45 L120,45 L138,45 L146,38 L154,52 L162,45 L260,45 L278,45 L286,12 L296,78 L306,30 L314,45 L440,45 L458,45 L466,38 L474,52 L482,45 L580,45 L598,45 L606,12 L616,78 L626,30 L634,45 L760,45 L778,45 L786,38 L794,52 L802,45 L900,45"/>
+      </svg>
+      <p class="pulse-caption">Steady · Present · Precise</p>
+    </div>
   </div>
 
   <section id="work">
@@ -358,7 +390,7 @@
         <div class="ph" data-src="photos/5.jpg"><span class="init">A.A.</span></div>
         <div class="ph" data-src="photos/6.jpg"><span class="init">A.A.</span></div>
       </div>
-      <p class="gallery-note reveal">Family photographs are being gathered for this page.</p>
+      <p class="gallery-note reveal">From Ghana to New Jersey — moments gathered by his family.</p>
     </div>
   </section>
 
@@ -409,6 +441,12 @@
     img.onload = () => { img.alt = "Dr. Andrew Assiamah"; ph.replaceChildren(img); };
     img.src = ph.dataset.src;
   });
+
+  // respect reduced motion: keep the sea still
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const sea = document.querySelector(".hero-sea");
+    if (sea) sea.pause();
+  }
 </script>
 
 </body>
