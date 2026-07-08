@@ -64,7 +64,13 @@
   .nav-links a{color:var(--sage);font-size:.82rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase}
   .nav-links a:hover{color:var(--ivory);text-decoration:none}
   .nav-links .give-link{color:var(--gold)}
-  @media(max-width:640px){.nav-links{gap:16px}.nav-links li:nth-child(2){display:none}}
+  @media(max-width:640px){
+    nav{padding:14px 18px}
+    .monogram{font-size:1.05rem;white-space:nowrap}
+    .nav-links{gap:14px}
+    .nav-links li:nth-child(2){display:none}
+    .nav-links a{font-size:.72rem;letter-spacing:1px;white-space:nowrap}
+  }
 
   /* ---------- hero ---------- */
   .hero-stage{position:relative;overflow:hidden}
@@ -171,14 +177,25 @@
   .timeline{list-style:none;margin-top:50px;position:relative;max-width:760px}
   .timeline::before{
     content:"";position:absolute;left:7px;top:11px;bottom:6px;width:1px;
-    background:linear-gradient(to bottom,var(--gold),var(--line));
+    background:var(--line);
   }
+  /* gold line that descends as the visitor scrolls */
+  .timeline::after{
+    content:"";position:absolute;left:7px;top:11px;width:1px;
+    height:var(--tl-h,0%);max-height:calc(100% - 17px);
+    background:linear-gradient(to bottom,var(--gold),var(--gold-bright));
+    box-shadow:0 0 8px rgba(201,162,75,.45);
+    transition:height .15s ease-out;
+  }
+  @media(prefers-reduced-motion:reduce){.timeline::after{height:calc(100% - 17px)}}
   .timeline li{position:relative;padding:0 0 42px 42px}
   .timeline li:last-child{padding-bottom:0}
   .timeline li::before{
     content:"";position:absolute;left:0;top:3px;width:15px;height:15px;border-radius:50%;
-    background:var(--night);border:2px solid var(--gold);
+    background:var(--night);border:2px solid rgba(201,162,75,.3);
+    transition:border-color .4s ease,box-shadow .4s ease;
   }
+  .timeline li.lit::before{border-color:var(--gold);box-shadow:0 0 10px rgba(201,162,75,.4)}
   .timeline li:last-child::before{background:var(--gold)}
   /* stop the line at the final dot instead of running past it */
   .timeline li:last-child::after{
@@ -245,6 +262,26 @@
     color:var(--gold);opacity:.5;font-size:2rem;
   }
   .gallery-note{margin-top:18px;color:var(--sage);font-size:.88rem;opacity:.8}
+
+  /* ---------- river of memories ---------- */
+  .river-wrap{margin-top:56px}
+  .river{
+    display:flex;gap:10px;overflow-x:auto;padding:6px 24px 14px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);
+    mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);
+  }
+  .river::-webkit-scrollbar{display:none}
+  .river img{
+    height:230px;width:auto;flex:0 0 auto;border-radius:3px;
+    border:1px solid var(--line);background:var(--panel);
+  }
+  @media(max-width:640px){.river img{height:170px}}
+  .river-note{
+    text-align:center;margin-top:14px;padding:0 24px;
+    font-size:.74rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--sage);opacity:.7;
+  }
 
   /* ---------- give ---------- */
   #give{background:var(--panel);border-top:1px solid var(--line)}
@@ -417,6 +454,10 @@
       </div>
       <p class="gallery-note reveal">From Ghana to New Jersey — moments gathered by his family.</p>
     </div>
+    <div class="river-wrap reveal">
+      <div class="river" id="river" aria-label="Two hundred twelve photographs from his family's collection"></div>
+      <p class="river-note">212 memories from his family — swipe, or let them drift</p>
+    </div>
   </section>
 
   <section id="give">
@@ -454,6 +495,63 @@
 </footer>
 
 <script>
+  // river of memories: all 212 photos, lazy-loaded, gentle auto-drift once in view
+  const river = document.getElementById("river");
+  if (river) {
+    for (let i = 1; i <= 212; i++) {
+      const img = document.createElement("img");
+      img.src = "photos/tribute/" + String(i).padStart(3, "0") + ".jpg";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.alt = "Memory of Dr. Andrew Assiamah";
+      river.appendChild(img);
+    }
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let auto = false, pos = 0, last = null, idleTimer = null;
+      const drift = (t) => {
+        if (auto) {
+          if (last !== null) {
+            pos += (t - last) * 0.04; // ~40px per second
+            if (pos >= river.scrollWidth - river.clientWidth - 1) pos = 0;
+            river.scrollLeft = pos;
+          }
+          last = t;
+        } else {
+          last = null;
+        }
+        requestAnimationFrame(drift);
+      };
+      const pause = () => {
+        auto = false;
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => { pos = river.scrollLeft; auto = true; }, 3000);
+      };
+      ["touchstart", "pointerdown", "wheel"].forEach(ev =>
+        river.addEventListener(ev, pause, { passive: true }));
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { pos = river.scrollLeft; auto = true; }
+        else { auto = false; }
+      }, { threshold: 0.15 }).observe(river);
+      requestAnimationFrame(drift);
+    }
+  }
+
+  // timeline: the gold line descends and dots light up as you scroll
+  const tl = document.querySelector(".timeline");
+  if (tl) {
+    const items = Array.from(tl.querySelectorAll("li"));
+    const updateTl = () => {
+      const r = tl.getBoundingClientRect();
+      const anchor = window.innerHeight * 0.72;
+      const p = Math.min(1, Math.max(0, (anchor - r.top) / r.height));
+      tl.style.setProperty("--tl-h", (p * 100).toFixed(2) + "%");
+      items.forEach(li => li.classList.toggle("lit", li.getBoundingClientRect().top + 12 < anchor));
+    };
+    addEventListener("scroll", updateTl, { passive: true });
+    addEventListener("resize", updateTl, { passive: true });
+    updateTl();
+  }
+
   // scroll reveals
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
