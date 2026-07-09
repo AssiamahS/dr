@@ -29,7 +29,7 @@
     --max:1080px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{
     background:var(--night);
     color:var(--ivory);
@@ -60,16 +60,20 @@
     color:var(--ivory);letter-spacing:.5px;
   }
   .monogram span{color:var(--gold)}
-  .nav-links{display:flex;gap:26px;list-style:none}
+  .nav-links{
+    display:flex;gap:26px;list-style:none;min-width:0;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .nav-links::-webkit-scrollbar{display:none}
   .nav-links a{color:var(--sage);font-size:.82rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase}
   .nav-links a:hover{color:var(--ivory);text-decoration:none}
   .nav-links .give-link{color:var(--gold)}
   @media(max-width:640px){
     nav{padding:14px 18px}
-    .monogram{font-size:1.05rem;white-space:nowrap}
-    .nav-links{gap:14px}
+    .monogram{font-size:.98rem;white-space:nowrap}
+    .nav-links{gap:9px}
     .nav-compact-hide{display:none}
-    .nav-links a{font-size:.72rem;letter-spacing:1px;white-space:nowrap}
+    .nav-links a{font-size:.68rem;letter-spacing:.6px;white-space:nowrap}
   }
 
   /* ---------- hero ---------- */
