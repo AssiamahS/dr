@@ -68,7 +68,7 @@
     nav{padding:14px 18px}
     .monogram{font-size:1.05rem;white-space:nowrap}
     .nav-links{gap:14px}
-    .nav-links li:nth-child(2){display:none}
+    .nav-compact-hide{display:none}
     .nav-links a{font-size:.72rem;letter-spacing:1px;white-space:nowrap}
   }
 
@@ -175,19 +175,22 @@
 
   /* ---------- timeline ---------- */
   .timeline{list-style:none;margin-top:50px;position:relative;max-width:760px}
+  /* --tl-end is set by JS to the exact pixel Y of the final dot's center,
+     so neither line ever draws past it regardless of text length below */
   .timeline::before{
-    content:"";position:absolute;left:7px;top:11px;bottom:6px;width:1px;
+    content:"";position:absolute;left:7px;top:11px;width:1px;
+    height:calc(var(--tl-end,100%) - 11px);
     background:var(--line);
   }
   /* gold line that descends as the visitor scrolls */
   .timeline::after{
     content:"";position:absolute;left:7px;top:11px;width:1px;
-    height:var(--tl-h,0%);max-height:calc(100% - 17px);
+    height:var(--tl-h,0px);
     background:linear-gradient(to bottom,var(--gold),var(--gold-bright));
     box-shadow:0 0 8px rgba(201,162,75,.45);
     transition:height .15s ease-out;
   }
-  @media(prefers-reduced-motion:reduce){.timeline::after{height:calc(100% - 17px)}}
+  @media(prefers-reduced-motion:reduce){.timeline::after{height:calc(var(--tl-end,100%) - 11px)}}
   .timeline li{position:relative;padding:0 0 42px 42px}
   .timeline li:last-child{padding-bottom:0}
   .timeline li::before{
@@ -197,10 +200,6 @@
   }
   .timeline li.lit::before{border-color:var(--gold);box-shadow:0 0 10px rgba(201,162,75,.4)}
   .timeline li:last-child::before{background:var(--gold)}
-  /* stop the line at the final dot instead of running past it */
-  .timeline li:last-child::after{
-    content:"";position:absolute;left:6px;top:18px;bottom:0;width:3px;background:var(--night);
-  }
   .timeline .when{
     font-size:.76rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
     color:var(--gold);display:block;margin-bottom:5px;
@@ -272,11 +271,63 @@
     mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);
   }
   .river::-webkit-scrollbar{display:none}
+  .river-set{display:flex;gap:10px;flex:0 0 auto}
   .river img{
-    height:230px;width:auto;flex:0 0 auto;border-radius:3px;
+    height:230px;width:auto;flex:0 0 auto;border-radius:3px;cursor:pointer;
     border:1px solid var(--line);background:var(--panel);
+    transition:border-color .2s ease;
   }
+  .river img:hover{border-color:var(--gold)}
   @media(max-width:640px){.river img{height:170px}}
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed;inset:0;z-index:200;
+    display:flex;align-items:center;justify-content:center;padding:24px;
+    background:rgba(6,14,11,.93);backdrop-filter:blur(8px);
+    opacity:0;visibility:hidden;transition:opacity .35s ease;
+  }
+  .lightbox.open{opacity:1;visibility:visible}
+  .lightbox img{
+    max-width:min(92vw,1100px);max-height:82vh;width:auto;height:auto;
+    border-radius:4px;border:1px solid var(--line);
+    box-shadow:0 30px 80px rgba(0,0,0,.6);
+    opacity:0;transform:scale(.97);transition:opacity .35s ease,transform .35s ease;
+  }
+  .lightbox.open img{opacity:1;transform:scale(1)}
+  .lb-btn{
+    position:absolute;width:44px;height:44px;border-radius:50%;
+    background:rgba(11,29,24,.7);border:1px solid var(--line);color:var(--ivory);
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;line-height:1;
+    cursor:pointer;transition:border-color .2s ease,color .2s ease;
+  }
+  .lb-btn:hover{border-color:var(--gold);color:var(--gold-bright)}
+  .lb-close{top:22px;right:22px}
+  .lb-prev{left:22px;top:50%;margin-top:-22px}
+  .lb-next{right:22px;top:50%;margin-top:-22px}
+  .lb-count{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--sage);
+  }
+  @media(max-width:640px){
+    .lb-btn{width:38px;height:38px;font-size:1.05rem}
+    .lb-prev{left:10px;margin-top:-19px}.lb-next{right:10px;margin-top:-19px}
+    .lb-close{top:14px;right:14px}
+  }
+  @media(prefers-reduced-motion:reduce){.lightbox,.lightbox img{transition:none}}
+
+  /* ---------- live ---------- */
+  #live .live-frame{
+    margin-top:40px;aspect-ratio:16/9;max-width:900px;
+    background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  }
+  #live iframe{width:100%;height:100%;border:0;display:block}
+  .live-dot{
+    display:inline-block;width:9px;height:9px;border-radius:50%;background:#e05252;
+    margin-right:7px;animation:livepulse 1.6s ease-in-out infinite;
+  }
+  @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .live-note{margin-top:16px;color:var(--sage);font-size:.95rem;max-width:640px}
   .river-note{
     text-align:center;margin-top:14px;padding:0 24px;
     font-size:.74rem;letter-spacing:2px;text-transform:uppercase;
@@ -315,8 +366,9 @@
   <nav aria-label="Main">
     <div class="monogram">Dr. Andrew <span>Assiamah</span></div>
     <ul class="nav-links">
+      <li id="nav-live" hidden><a href="#live"><span class="live-dot"></span>Live</a></li>
       <li><a href="#work">His Work</a></li>
-      <li><a href="#honors">Honors</a></li>
+      <li class="nav-compact-hide"><a href="#honors">Honors</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a class="give-link" href="#give">Give</a></li>
     </ul>
@@ -356,6 +408,17 @@
     </div>
   </div>
 
+  <section id="live" hidden>
+    <div class="wrap">
+      <p class="sec-eyebrow"><span class="live-dot"></span>Live Now</p>
+      <h2>Gathered together, <em>wherever you are</em></h2>
+      <div class="live-frame">
+        <iframe id="live-iframe" title="Live stream" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <p class="live-note">The family is streaming live — thank you for being here with them.</p>
+    </div>
+  </section>
+
   <section id="work">
     <div class="wrap">
       <p class="sec-eyebrow reveal">His Work</p>
@@ -367,6 +430,11 @@
       </div>
 
       <ol class="timeline reveal">
+        <li>
+          <span class="when">January 12, 1965</span>
+          <div class="what">Born</div>
+          <div class="where">Ghana</div>
+        </li>
         <li>
           <span class="when">2000</span>
           <div class="what">Doctor of Medicine</div>
@@ -487,6 +555,13 @@
 
 <footer>
   <p class="foot-sig">In loving memory of Dr. Andrew Assiamah · Built with love by his family.</p>
+  <div class="lightbox" id="lightbox" aria-hidden="true" aria-label="Photo viewer">
+    <button class="lb-btn lb-close" id="lb-close" aria-label="Close">&times;</button>
+    <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous photo">&#8249;</button>
+    <img id="lb-img" src="" alt="Dr. Andrew Assiamah" />
+    <button class="lb-btn lb-next" id="lb-next" aria-label="Next photo">&#8250;</button>
+    <p class="lb-count" id="lb-count"></p>
+  </div>
   <p class="foot-domains">
     <a href="https://drandrewassiamah.com">drandrewassiamah.com</a> · also home at
     <a href="https://drassiamah.com">drassiamah.com</a> and
@@ -495,24 +570,78 @@
 </footer>
 
 <script>
-  // river of memories: all 212 photos, lazy-loaded, gentle auto-drift once in view
+  // river of memories: all 212 photos on an endless loop — the strip is built
+  // twice and scroll position wraps at the seam, so the drift never stops
+  const RIVER_W = [955,480,480,480,427,554,427,427,852,614,480,960,360,1414,853,853,853,663,427,480,480,489,857,313,517,521,480,734,729,506,320,493,480,809,871,802,480,480,657,658,295,480,360,960,971,387,737,807,348,480,360,818,360,360,360,352,387,328,360,360,311,756,480,852,810,1123,927,953,480,685,361,480,486,365,755,360,360,853,986,749,1076,965,928,487,730,1138,545,463,458,462,960,488,853,853,959,1138,560,612,822,863,295,295,295,532,363,360,832,857,873,785,360,681,1155,456,369,1086,564,1138,1138,645,1138,564,1138,853,1123,547,443,480,480,371,853,734,480,929,484,480,638,474,232,281,480,380,297,521,729,373,676,943,480,675,853,853,480,296,640,428,859,489,440,479,1072,1153,833,939,313,409,446,853,464,480,480,468,640,853,480,480,296,480,480,373,853,201,506,384,405,653,543,480,427,360,429,480,427,295,480,640,334,480,480,373,233,480,342,480,480,853,480,853,960,960,427,960];
   const river = document.getElementById("river");
   if (river) {
-    for (let i = 1; i <= 212; i++) {
-      const img = document.createElement("img");
-      img.src = "photos/tribute/" + String(i).padStart(3, "0") + ".jpg";
-      img.loading = "lazy";
-      img.decoding = "async";
-      img.alt = "Memory of Dr. Andrew Assiamah";
-      river.appendChild(img);
-    }
+    const buildSet = (isCopy) => {
+      const set = document.createElement("div");
+      set.className = "river-set";
+      if (isCopy) set.setAttribute("aria-hidden", "true");
+      RIVER_W.forEach((w, i) => {
+        const img = document.createElement("img");
+        img.src = "photos/tribute/" + String(i + 1).padStart(3, "0") + ".jpg";
+        img.width = w;
+        img.height = 640;
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.alt = isCopy ? "" : "Memory of Dr. Andrew Assiamah";
+        img.dataset.index = i;
+        set.appendChild(img);
+      });
+      river.appendChild(set);
+      return set;
+    };
+    const firstSetEl = buildSet(false);
+    buildSet(true);
+
+    // lightbox: tap any photo to open it full-size, fading in like the rest of the page
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lb-img");
+    const lbCount = document.getElementById("lb-count");
+    let lbIndex = 0, resumeAfterClose = () => {};
+    const lbSrc = (i) => "photos/tribute/" + String(i + 1).padStart(3, "0") + ".jpg";
+    const openLightbox = (i) => {
+      lbIndex = ((i % RIVER_W.length) + RIVER_W.length) % RIVER_W.length;
+      lbImg.src = lbSrc(lbIndex);
+      lbCount.textContent = (lbIndex + 1) + " / " + RIVER_W.length;
+      lb.classList.add("open");
+      lb.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    };
+    const closeLightbox = () => {
+      lb.classList.remove("open");
+      lb.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      resumeAfterClose();
+    };
+    const stepLightbox = (d) => openLightbox(lbIndex + d);
+    river.addEventListener("click", (e) => {
+      const img = e.target.closest("img[data-index]");
+      if (img) openLightbox(parseInt(img.dataset.index, 10));
+    });
+    document.getElementById("lb-close").addEventListener("click", closeLightbox);
+    document.getElementById("lb-prev").addEventListener("click", () => stepLightbox(-1));
+    document.getElementById("lb-next").addEventListener("click", () => stepLightbox(1));
+    lb.addEventListener("click", (e) => { if (e.target === lb) closeLightbox(); });
+    addEventListener("keydown", (e) => {
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") stepLightbox(-1);
+      if (e.key === "ArrowRight") stepLightbox(1);
+    });
+
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      let auto = false, pos = 0, last = null, idleTimer = null;
+      const setWidth = () => firstSetEl.offsetWidth + 10;
+      let auto = false, pos = 0, last = null, held = false, resumeTimer = null, inView = false;
+      const canResume = () => inView && !held && !lb.classList.contains("open");
+      const resync = () => { pos = river.scrollLeft % setWidth(); river.scrollLeft = pos; };
       const drift = (t) => {
         if (auto) {
           if (last !== null) {
             pos += (t - last) * 0.04; // ~40px per second
-            if (pos >= river.scrollWidth - river.clientWidth - 1) pos = 0;
+            if (pos >= setWidth()) pos -= setWidth();
             river.scrollLeft = pos;
           }
           last = t;
@@ -521,34 +650,88 @@
         }
         requestAnimationFrame(drift);
       };
-      const pause = () => {
-        auto = false;
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => { pos = river.scrollLeft; auto = true; }, 3000);
+      const scheduleResume = (delay) => {
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(() => { if (canResume()) { resync(); auto = true; } }, delay);
       };
-      ["touchstart", "pointerdown", "wheel"].forEach(ev =>
-        river.addEventListener(ev, pause, { passive: true }));
+      resumeAfterClose = () => scheduleResume(300);
+      // holding a photo down pauses the drift for as long as it's held
+      const holdStart = () => { held = true; auto = false; clearTimeout(resumeTimer); };
+      const holdEnd = () => { if (!held) return; held = false; scheduleResume(1200); };
+      river.addEventListener("pointerdown", holdStart, { passive: true });
+      ["pointerup", "pointercancel", "pointerleave"].forEach(ev =>
+        river.addEventListener(ev, holdEnd, { passive: true }));
+      river.addEventListener("wheel", () => { auto = false; scheduleResume(3000); }, { passive: true });
       new IntersectionObserver(([e]) => {
-        if (e.isIntersecting) { pos = river.scrollLeft; auto = true; }
+        inView = e.isIntersecting;
+        if (inView) { if (canResume()) { resync(); auto = true; } }
         else { auto = false; }
       }, { threshold: 0.15 }).observe(river);
       requestAnimationFrame(drift);
     }
   }
 
-  // timeline: the gold line descends and dots light up as you scroll
+  // live stream: appears automatically while the Twitch channel is live,
+  // or set embedUrl to any player URL (YouTube etc.) to switch it on manually
+  const LIVE_CONFIG = { twitchChannel: "metasly", embedUrl: "" };
+  const liveSection = document.getElementById("live");
+  const navLive = document.getElementById("nav-live");
+  const liveFrame = document.getElementById("live-iframe");
+  const setLive = (on, src) => {
+    liveSection.hidden = !on;
+    navLive.hidden = !on;
+    liveFrame.src = on ? src : "";
+  };
+  if (LIVE_CONFIG.embedUrl) {
+    setLive(true, LIVE_CONFIG.embedUrl);
+  } else if (LIVE_CONFIG.twitchChannel) {
+    const twitchSrc = "https://player.twitch.tv/?channel=" + LIVE_CONFIG.twitchChannel +
+      "&parent=" + location.hostname;
+    // Twitch's own public GQL endpoint — same one twitch.tv's web player uses,
+    // far more reliable than third-party uptime-checker proxies
+    const checkLive = () => {
+      fetch("https://gql.twitch.tv/gql", {
+        method: "POST",
+        headers: { "Client-Id": "kimne78kx3ncx6brgo4mv6wki5h1ko", "Content-Type": "text/plain;charset=UTF-8" },
+        body: JSON.stringify([{
+          operationName: "StreamMetadata",
+          variables: { channelLogin: LIVE_CONFIG.twitchChannel },
+          extensions: { persistedQuery: { version: 1, sha256Hash: "1c719a40e481453e5c48d9bb585d971b8b372f8ebb105b17076722264dfa5b3e" } }
+        }])
+      })
+        .then(r => r.json())
+        .then(d => {
+          const on = !!(d && d[0] && d[0].data && d[0].data.user && d[0].data.user.stream);
+          if (on === liveSection.hidden) setLive(on, twitchSrc);
+        })
+        .catch(() => {});
+    };
+    checkLive();
+    setInterval(checkLive, 45000);
+  }
+
+  // timeline: the gold line descends and dots light up as you scroll,
+  // capped at the exact pixel of the final dot's center so it never overshoots
   const tl = document.querySelector(".timeline");
   if (tl) {
     const items = Array.from(tl.querySelectorAll("li"));
+    const lastDotEnd = () => {
+      const tlTop = tl.getBoundingClientRect().top;
+      const lastLiTop = items[items.length - 1].getBoundingClientRect().top;
+      return (lastLiTop - tlTop) + 3 + 7.5; // li offset + dot's top + half its height
+    };
+    const setEnd = () => tl.style.setProperty("--tl-end", lastDotEnd() + "px");
     const updateTl = () => {
       const r = tl.getBoundingClientRect();
       const anchor = window.innerHeight * 0.72;
+      const end = lastDotEnd();
       const p = Math.min(1, Math.max(0, (anchor - r.top) / r.height));
-      tl.style.setProperty("--tl-h", (p * 100).toFixed(2) + "%");
+      tl.style.setProperty("--tl-h", Math.min(p * r.height, end - 11) + "px");
       items.forEach(li => li.classList.toggle("lit", li.getBoundingClientRect().top + 12 < anchor));
     };
+    setEnd();
     addEventListener("scroll", updateTl, { passive: true });
-    addEventListener("resize", updateTl, { passive: true });
+    addEventListener("resize", () => { setEnd(); updateTl(); }, { passive: true });
     updateTl();
   }
 
