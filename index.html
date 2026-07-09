@@ -411,7 +411,9 @@
       <div class="live-frame">
         <iframe id="live-iframe" title="Live stream" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
       </div>
-      <p class="live-note">The family is streaming live — thank you for being here with them.</p>
+      <p class="live-note">The family is streaming live — thank you for being here with them.
+        If the video above doesn't load (some browser privacy extensions block embedded players),
+        <a id="live-fallback-link" href="#" target="_blank" rel="noopener">watch directly on Twitch &#8599;</a>.</p>
     </div>
   </section>
 
@@ -675,6 +677,10 @@
     navLive.hidden = !on;
     liveFrame.src = on ? src : "";
   };
+  if (LIVE_CONFIG.twitchChannel) {
+    const fallbackLink = document.getElementById("live-fallback-link");
+    if (fallbackLink) fallbackLink.href = "https://www.twitch.tv/" + LIVE_CONFIG.twitchChannel;
+  }
   if (LIVE_CONFIG.embedUrl) {
     setLive(true, LIVE_CONFIG.embedUrl);
   } else if (LIVE_CONFIG.twitchChannel) {
