@@ -182,13 +182,13 @@
   /* --tl-end is set by JS to the exact pixel Y of the final dot's center,
      so neither line ever draws past it regardless of text length below */
   .timeline::before{
-    content:"";position:absolute;left:7px;top:11px;width:1px;
+    content:"";position:absolute;left:8.75px;top:11px;width:2px;
     height:calc(var(--tl-end,100%) - 11px);
     background:var(--line);
   }
   /* gold line that descends as the visitor scrolls */
   .timeline::after{
-    content:"";position:absolute;left:7px;top:11px;width:1px;
+    content:"";position:absolute;left:8.75px;top:11px;width:2px;
     height:var(--tl-h,0px);
     background:linear-gradient(to bottom,var(--gold),var(--gold-bright));
     box-shadow:0 0 8px rgba(201,162,75,.45);
