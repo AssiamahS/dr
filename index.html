@@ -328,6 +328,30 @@
   }
   @keyframes livepulse{0%,100%{opacity:1}50%{opacity:.3}}
   .live-note{margin-top:16px;color:var(--sage);font-size:.95rem;max-width:640px}
+  /* music player: strip under the nav + docked video tile (YouTube needs a visible player, 200px minimum) */
+  .nav-player{display:inline-flex;align-items:center;gap:7px}
+  .nav-player .live-dot{display:none}
+  .nav-player.on .live-dot{display:inline-block}
+  .player{border-top:1px solid var(--line);background:rgba(16,38,31,.92)}
+  .player[hidden]{display:none}
+  .player-inner{max-width:var(--max);margin:0 auto;padding:8px 24px;display:flex;align-items:center;gap:14px;min-width:0}
+  .p-eq{display:inline-flex;gap:2px;align-items:flex-end;height:14px;flex:none}
+  .p-eq i{width:3px;height:100%;background:var(--gold);border-radius:1px;transform:scaleY(.3);transform-origin:bottom}
+  .player.playing .p-eq i{animation:peq 1s ease-in-out infinite}
+  .player.playing .p-eq i:nth-child(2){animation-delay:.2s}.player.playing .p-eq i:nth-child(3){animation-delay:.4s}
+  @keyframes peq{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+  .p-title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:"Newsreader",serif;font-size:1rem;color:var(--sage)}
+  .player.playing .p-title{color:var(--ivory)}
+  .p-ctl{display:flex;gap:6px;align-items:center;flex:none}
+  .p-ctl button{font:inherit;font-size:.8rem;color:var(--ivory);background:var(--panel-2);border:1px solid var(--line);border-radius:999px;width:32px;height:32px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .p-ctl button:hover{border-color:var(--gold);color:var(--gold-bright)}
+  .p-ctl .p-main{background:var(--gold);color:var(--night);border-color:var(--gold);width:38px;height:38px;font-size:.9rem}
+  .p-ctl .p-hide{width:auto;padding:0 12px;font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--sage)}
+  .dock{position:fixed;right:16px;bottom:16px;z-index:60;width:200px;height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .dock[hidden]{display:none}
+  .dock iframe{width:100%;height:100%;display:block;border:0}
+  @media(max-width:640px){.player-inner{padding:8px 14px;gap:10px}.p-ctl .p-hide{display:none}}
+  @media(prefers-reduced-motion:reduce){.player.playing .p-eq i{animation:none;transform:scaleY(1)}}
   .river-note{
     text-align:center;margin-top:14px;padding:0 24px;
     font-size:.74rem;letter-spacing:2px;text-transform:uppercase;
@@ -366,14 +390,27 @@
   <nav aria-label="Main">
     <div class="monogram">Dr. Andrew <span>Assiamah</span></div>
     <ul class="nav-links">
-      <li id="nav-live" hidden><a href="#live"><span class="live-dot"></span>Live</a></li>
+      <li><a href="#" id="nav-player" class="nav-player"><span class="live-dot"></span>Music</a></li>
       <li><a href="#work">His Work</a></li>
       <li class="nav-compact-hide"><a href="#honors">Honors</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a class="give-link" href="#give">Give</a></li>
     </ul>
   </nav>
+  <div class="player" id="player" aria-label="Music player">
+    <div class="player-inner">
+      <span class="p-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="p-title" id="p-title">Music · press play</span>
+      <span class="p-ctl">
+        <button id="p-prev" type="button" aria-label="Previous">&#9198;</button>
+        <button id="p-play" type="button" aria-label="Play" class="p-main">&#9654;</button>
+        <button id="p-next" type="button" aria-label="Next">&#9197;</button>
+        <button id="p-hide" type="button" class="p-hide">Hide</button>
+      </span>
+    </div>
+  </div>
 </header>
+<div class="dock" id="dock" hidden><div id="yt"></div><audio id="aud" preload="none"></audio></div>
 
 <main>
 
@@ -408,18 +445,6 @@
     </div>
   </div>
 
-  <section id="live" hidden>
-    <div class="wrap">
-      <p class="sec-eyebrow"><span class="live-dot"></span>Live Now</p>
-      <h2>Gathered together, <em>wherever you are</em></h2>
-      <div class="live-frame">
-        <iframe id="live-iframe" title="Live stream" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
-      </div>
-      <p class="live-note">The family is streaming live — thank you for being here with them.
-        If the video above doesn't load (some browser privacy extensions block embedded players),
-        <a id="live-fallback-link" href="#" target="_blank" rel="noopener">watch directly on Twitch &#8599;</a>.</p>
-    </div>
-  </section>
 
   <section id="work">
     <div class="wrap">
@@ -668,48 +693,104 @@
     }
   }
 
-  // live stream: appears automatically while the Twitch channel is live,
-  // or set embedUrl to any player URL (YouTube etc.) to switch it on manually
-  const LIVE_CONFIG = { twitchChannel: "", embedUrl: "" };   // live embed retired 2026-10-15: the metasly channel now runs a 24/7 music stream, not family services
-  const liveSection = document.getElementById("live");
-  const navLive = document.getElementById("nav-live");
-  const liveFrame = document.getElementById("live-iframe");
-  const setLive = (on, src) => {
-    liveSection.hidden = !on;
-    navLive.hidden = !on;
-    liveFrame.src = on ? src : "";
+  // music player. Queue entries: { video: "<YouTube id>" } | { list: "<YouTube playlist id>" } | { src: "https://…/file.mp3", title }
+  const RADIO = [
+    { video: "9oZHVSve1OI" },  // Non Stop Ghana Gospel Music Mix 2025 (3h45)
+    { video: "tVFXzSih51k" },  // Ghana Highlife Mix — Daddy Lumba, Ofori Amponsah (1h23)
+    { video: "HU5CH1jPXjQ" },  // Ghana Gospel Praise & Thanksgiving Mix (1h46)
+    { video: "hzHcNnYvbsQ" },  // Ghana Classic Highlife Mix Vol. 1 (2h12)
+    { video: "YGuzmyLvRM0" },  // Ghana Gospel Mix — Twi — Vol. One (2h51)
+    { video: "UY4Y5MoGErU" },  // HighLife Party Mix Vol 2 — Daddy Lumba, Kojo Antwi (1h03)
+    { video: "fewpm8UBMRY" },  // Ghana Sikyi Highlife Mix (3h44)
+    { video: "jtAvNPTRNoE" },  // 10 hours Ghanaian Local Worship and Prayer songs
+  ];
+  const $ = id => document.getElementById(id);
+  const bar = $("player"), dock = $("dock"), aud = $("aud"), titleEl = $("p-title"), playBtn = $("p-play"), navP = $("nav-player");
+  let yt = null, ytReady = false, idx = 0, playing = false, wantPlay = false, hidden = false;
+  try { hidden = localStorage.getItem("music-hidden") === "1"; } catch {}
+  const cur = () => RADIO[idx % RADIO.length];
+  const isYT = it => !!(it.list || it.video);
+  const setPlaying = on => {
+    playing = on;
+    bar.classList.toggle("playing", on);
+    navP.classList.toggle("on", on);
+    playBtn.innerHTML = on ? "&#10074;&#10074;" : "&#9654;";
+    playBtn.setAttribute("aria-label", on ? "Pause" : "Play");
   };
-  if (LIVE_CONFIG.twitchChannel) {
-    const fallbackLink = document.getElementById("live-fallback-link");
-    if (fallbackLink) fallbackLink.href = "https://www.twitch.tv/" + LIVE_CONFIG.twitchChannel;
+  const showDock = on => { dock.hidden = !on; };
+  function loadYTApi() {
+    if (window.YT && window.YT.Player) { onYTReady(); return; }
+    window.onYouTubeIframeAPIReady = onYTReady;
+    const sc = document.createElement("script"); sc.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(sc);
   }
-  if (LIVE_CONFIG.embedUrl) {
-    setLive(true, LIVE_CONFIG.embedUrl);
-  } else if (LIVE_CONFIG.twitchChannel) {
-    const twitchSrc = "https://player.twitch.tv/?channel=" + LIVE_CONFIG.twitchChannel +
-      "&parent=" + location.hostname;
-    // Twitch's own public GQL endpoint — same one twitch.tv's web player uses,
-    // far more reliable than third-party uptime-checker proxies
-    const checkLive = () => {
-      fetch("https://gql.twitch.tv/gql", {
-        method: "POST",
-        headers: { "Client-Id": "kimne78kx3ncx6brgo4mv6wki5h1ko", "Content-Type": "text/plain;charset=UTF-8" },
-        body: JSON.stringify([{
-          operationName: "StreamMetadata",
-          variables: { channelLogin: LIVE_CONFIG.twitchChannel },
-          extensions: { persistedQuery: { version: 1, sha256Hash: "1c719a40e481453e5c48d9bb585d971b8b372f8ebb105b17076722264dfa5b3e" } }
-        }])
-      })
-        .then(r => r.json())
-        .then(d => {
-          const on = !!(d && d[0] && d[0].data && d[0].data.user && d[0].data.user.stream);
-          if (on === liveSection.hidden) setLive(on, twitchSrc);
-        })
-        .catch(() => {});
-    };
-    checkLive();
-    setInterval(checkLive, 45000);
+  function onYTReady() {
+    if (yt) return;
+    yt = new YT.Player("yt", {
+      width: 200, height: 200,
+      playerVars: { autoplay: 0, controls: 1, rel: 0, playsinline: 1, modestbranding: 1, origin: location.origin },
+      events: {
+        onReady: () => { ytReady = true; loadCurrent(); },
+        onStateChange: e => {
+          if (e.data === YT.PlayerState.PLAYING) { setPlaying(true); showTitle(); showDock(!hidden); }
+          else if (e.data === YT.PlayerState.CUED) showTitle();
+          else if (e.data === YT.PlayerState.PAUSED) setPlaying(false);
+          else if (e.data === YT.PlayerState.ENDED) {
+            const it = cur();
+            if (it.list) { const i = yt.getPlaylistIndex(), n = (yt.getPlaylist() || []).length; if (i < n - 1) return; }
+            next();
+          }
+        },
+        onError: () => next()
+      }
+    });
   }
+  function showTitle() {
+    try { const d = yt.getVideoData(); if (d && d.title) titleEl.textContent = d.title + (d.author ? " · " + d.author : ""); } catch {}
+  }
+  function loadCurrent() {
+    const it = cur();
+    if (isYT(it)) {
+      aud.pause();
+      if (!ytReady) { loadYTApi(); return; }
+      showDock(wantPlay && !hidden);
+      if (it.list) wantPlay ? yt.loadPlaylist({ list: it.list, listType: "playlist" }) : yt.cuePlaylist({ list: it.list, listType: "playlist" });
+      else wantPlay ? yt.loadVideoById(it.video) : yt.cueVideoById(it.video);
+      titleEl.textContent = "Loading…";
+    } else {
+      if (yt && ytReady) { try { yt.stopVideo(); } catch {} }
+      showDock(false);
+      aud.src = it.src; titleEl.textContent = it.title || it.src.split("/").pop();
+      if (wantPlay) aud.play().catch(() => setPlaying(false));
+    }
+  }
+  function play() {
+    wantPlay = true;
+    const it = cur();
+    if (isYT(it)) { if (!ytReady) { loadYTApi(); return; } if (hidden) { hidden = false; try { localStorage.setItem("music-hidden", "0"); } catch {} showDock(true); $("p-hide").textContent = "Hide"; } yt.playVideo(); }
+    else aud.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+  }
+  function pause() { wantPlay = false; const it = cur(); if (isYT(it)) { if (ytReady) yt.pauseVideo(); } else aud.pause(); setPlaying(false); }
+  function next() { idx = (idx + 1) % RADIO.length; loadCurrent(); }
+  function prev() {
+    const it = cur();
+    if (isYT(it) && it.list && ytReady && yt.getPlaylistIndex() > 0) { yt.previousVideo(); return; }
+    idx = (idx - 1 + RADIO.length) % RADIO.length; loadCurrent();
+  }
+  playBtn.addEventListener("click", () => playing ? pause() : play());
+  $("p-next").addEventListener("click", () => { wantPlay = wantPlay || playing; const it = cur(); if (isYT(it) && it.list && ytReady) { const i = yt.getPlaylistIndex(), n = (yt.getPlaylist() || []).length; if (i < n - 1) { yt.nextVideo(); return; } } next(); });
+  $("p-prev").addEventListener("click", prev);
+  $("p-hide").addEventListener("click", () => {
+    hidden = !hidden; try { localStorage.setItem("music-hidden", hidden ? "1" : "0"); } catch {}
+    if (hidden && isYT(cur())) pause();
+    showDock(!hidden && isYT(cur()) && ytReady && wantPlay);
+    $("p-hide").textContent = hidden ? "Show" : "Hide";
+  });
+  navP.addEventListener("click", e => { e.preventDefault(); bar.hidden = !bar.hidden; if (!bar.hidden) window.scrollTo({ top: 0, behavior: "smooth" }); });
+  aud.addEventListener("ended", next);
+  aud.addEventListener("play", () => setPlaying(true));
+  aud.addEventListener("pause", () => setPlaying(false));
+  if (hidden) $("p-hide").textContent = "Show";
+  if (isYT(cur())) loadYTApi(); else loadCurrent();
 
   // timeline: the gold line descends and dots light up as you scroll,
   // capped at the exact pixel of the final dot's center so it never overshoots
